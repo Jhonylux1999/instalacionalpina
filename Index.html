@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlpinaInstal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Estilos para el cronómetro */
+    .countdown {
+      font-size: 3rem;
+      text-align: center;
+      margin-top: 20px;
+      color: #000;
+      animation: pulse 1s infinite;
+    }
+
+    /* Efecto de palpitación para el cronómetro */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Efecto de aparición/desaparición suave para la imagen */
+    .image-pulse {
+      animation: fade 3s ease-in-out infinite;
+    }
+
+    @keyframes fade {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Estilos del texto aleatorio */
+    .random-text {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Estilo para el mensaje e imagen final */
+    .finished-message,
+    .finished-image {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .finished-message {
+      font-size: 2rem;
+      color: red;
+    }
+
+    /* Estilo para las imágenes finales */
+    .finished-images {
+      display: none; /* Ocultamos inicialmente las imágenes */
+      justify-content: center;
+      gap: 30px; /* Espaciado elegante entre las imágenes */
+      margin-top: 20px;
+    }
+
+    .finished-images img {
+      max-width: 45%; /* Ajuste para que ambas imágenes quepan una al lado de la otra */
+      height: auto;
+    }
+  </style>
+</head>
+<body class="bg-black">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-12">
+        <!-- Aquí va la imagen con efecto de palpitación suave -->
+        <img src="Logo.png" alt="Tu imagen" id="image" class="img-fluid image-pulse" style="max-width: 40%; height: auto;">
+      </div>
+      <div class="col-12 countdown text-white" id="countdown">00:00:00</div>
+      <div class="col-12 random-text text-white" id="randomText"></div>
+      <!-- Mensaje que se muestra cuando el cronómetro se detiene -->
+      <div class="col-12 finished-message" id="finishedMessage">¡Se completo la migracion!</div>
+      <!-- Contenedor de las imágenes finales (ocultas inicialmente) -->
+      <div class="col-12 finished-images d-flex" id="finishedImages">
+        <img src="" alt="Cargando" id="finishedImage1" class="img-fluid">
+        <img src="" alt="Configurando" id="finishedImage2" class="img-fluid">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fecha y hora de destino (modifícala a la fecha/hora deseada)
+    const targetDate = new Date("2024-09-20T20:00:00").getTime();
+
+    // Textos aleatorios
+    const randomTexts = [
+    "Cargando SSL",
+    "Desplegando Scripts",
+    "Desplegando Librerías CSS",
+    "Configurando Panel",
+    "Exportando Datos",
+    "Instalando Firewall",
+    "Exportando Triggers",
+    "Configurando IP",
+    "Configurando DHCP",
+    "Configurando HTTP",
+    "Configurando HTTPS",
+    "Instalando SQL",
+    "Migrando SQL",
+    "Instalando Chart",
+    "Instalando jQuery",
+    "Desplegando jQuery",
+    "Desplegando Chart",
+    "Instalando Librerías",
+    "Exportando Configuraciones de Seguridad",
+    "Desplegando Blazor",
+    "Desplegando Razor",
+    "Exportando Disparadores",
+    "Desfragmentando Disco",
+    "Instalando Paquetes",
+    "Conectando Servidor",
+    "Conectando Servidor DNS",
+    "Verificando Integridad de Archivos",
+    "Configurando Servidor de Correo",
+    "Instalando Certificados SSL",
+    "Configurando Balanceador de Carga",
+    "Optimizando Rendimiento",
+    "Realizando Copia de Seguridad",
+    "Restaurando Copia de Seguridad",
+    "Configurando Red",
+    "Instalando Node.js",
+    "Instalando Python",
+    "Configurando Variables de Entorno",
+    "Instalando Docker",
+    "Desplegando Contenedores",
+    "Configurando Kubernetes",
+    "Instalando Redis",
+    "Instalando MongoDB",
+    "Configurando Servidor FTP",
+    "Instalando Apache",
+    "Instalando Nginx",
+    "Configurando Proxy Inverso",
+    "Instalando PHP",
+    "Configurando MySQL",
+    "Instalando PostgreSQL",
+    "Configurando Firewall de Aplicaciones Web",
+    "Instalando ElasticSearch",
+    "Configurando Servicios de Monitoreo",
+    "Instalando Grafana",
+    "Instalando Prometheus",
+    "Configurando Alertas",
+    "Instalando Jenkins",
+    "Configurando CI/CD",
+    "Instalando Git",
+    "Clonando Repositorio",
+    "Actualizando Sistema Operativo",
+    "Instalando Actualizaciones de Seguridad",
+    "Reiniciando Servidor",
+    "Configurando ASP.NET Core",
+    "Instalando .NET SDK",
+    "Configurando Entity Framework Core",
+    "Desplegando Aplicación ASP.NET Core",
+    "Configurando Middleware",
+    "Configurando Servicios de Dependencia",
+    "Configurando Identity Server",
+    "Configurando Autenticación y Autorización",
+    "Configurando SignalR",
+    "Configurando API REST",
+    "Configurando Razor Pages",
+    "Configurando MVC",
+    "Configurando Web API",
+    "Configurando Health Checks",
+    "Configurando Logging",
+    "Configurando Caching",
+    "Configurando GZIP Compression",
+    "Configurando HTTPS Redirection",
+    "Configurando CORS",
+    "Configurando Swagger",
+    "Configurando AutoMapper",
+    "Configurando MediatR",
+    "Configurando Background Services",
+    "Configurando Hosted Services",
+    "Configurando gRPC",
+    "Configurando WebSockets",
+    "Configurando Kestrel",
+    "Configurando IIS",
+    "Configurando Azure App Service",
+    "Configurando Azure Functions",
+    "Configurando Azure DevOps",
+    "Configurando Azure Key Vault",
+    "Configurando Azure Blob Storage",
+    "Configurando Azure SQL Database",
+    "Configurando Azure Cosmos DB",
+    "Configurando Azure Service Bus",
+    "Configurando Azure Event Grid",
+    "Configurando Azure Event Hubs",
+    "Configurando Azure Logic Apps",
+    "Configurando Azure API Management",
+    "Configurando Azure Application Insights",
+    "Configurando Azure Monitor",
+    "Configurando Azure Security Center",
+    "Configurando Azure Policy",
+    "Configurando Azure Blueprints",
+    "Configurando Azure Resource Manager",
+    "Configurando Azure Virtual Machines",
+    "Configurando Azure Kubernetes Service",
+    "Configurando Azure Container Instances",
+    "Configurando Azure Container Registry",
+    "Configurando Azure DevTest Labs",
+    "Configurando Azure Bastion",
+    "Configurando Azure Firewall",
+    "Configurando Azure Front Door",
+    "Configurando Azure Traffic Manager",
+    "Configurando Azure Load Balancer",
+    "Configurando Azure VPN Gateway",
+    "Configurando Azure ExpressRoute",
+    "Configurando Azure Virtual Network",
+    "Configurando Azure DNS",
+    "Configurando Azure Private Link",
+    "Configurando Azure Service Fabric",
+    "Configurando Azure Batch",
+    "Configurando Azure HPC Cache",
+    "Configurando Azure Dedicated Host",
+    "Configurando Azure VMware Solution",
+    "Configurando Azure Stack",
+    "Configurando Azure Arc",
+    "Configurando Azure Lighthouse",
+    "Configurando Azure Sentinel",
+    "Configurando Azure Synapse Analytics",
+    "Configurando Azure Data Factory",
+    "Configurando Azure Data Lake",
+    "Configurando Azure Databricks",
+    "Configurando Azure Stream Analytics",
+    "Configurando Azure Machine Learning",
+    "Configurando Azure Cognitive Services",
+    "Configurando Azure Bot Service",
+    "Configurando Azure IoT Hub",
+    "Configurando Azure IoT Central",
+    "Configurando Azure Sphere",
+    "Configurando Azure Digital Twins",
+    "Configurando Azure Time Series Insights",
+    "Configurando Azure Maps",
+    "Configurando Azure Percept",
+    "Configurando Azure Quantum",
+    "Configurando Azure Blockchain Service",
+    "Configurando Azure Confidential Ledger",
+    "Configurando Azure Orbital",
+    "Configurando Azure Purview",
+    "Configurando Azure Synapse Link",
+    "Configurando Azure Synapse Studio",
+    "Configurando Azure Synapse Pipelines",
+    "Configurando Azure Synapse SQL",
+    "Configurando Azure Synapse Spark",
+    "Configurando Azure Synapse Data Explorer",
+    "Configurando Azure Synapse Integration Runtime",
+    "Configurando Azure Synapse Managed VNET",
+    "Configurando Azure Synapse Private Endpoints",
+    "Configurando Azure Synapse Security",
+    "Configurando Azure Synapse Monitoring",
+    "Configurando Azure Synapse Troubleshooting",
+    "Configurando Azure Synapse Best Practices",
+    "Configurando Azure Synapse Performance Tuning",
+    "Configurando Azure Synapse Cost Management",
+    "Configurando Azure Synapse Governance",
+    "Configurando Azure Synapse Compliance",
+    "Configurando Azure Synapse Data Sharing",
+    "Configurando Azure Synapse Data Integration",
+    "Configurando Azure Synapse Data Preparation",
+    "Configurando Azure Synapse Data SSL"
+
+    ];
+
+    // Función para actualizar el cronómetro
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        // Mostrar el mensaje y las imágenes finales cuando el tiempo termina
+        document.getElementById("countdown").innerHTML = "00:00:00";
+        document.getElementById("finishedMessage").style.display = "block";
+        
+        // Muestra las imágenes finales y establece sus URLs
+        document.getElementById("finishedImage1").src = "1.png"; // Aquí agrega la URL de tu primera imagen
+        document.getElementById("finishedImage2").src = "2.png"; // Aquí agrega la URL de tu segunda imagen
+        document.getElementById("finishedImages").style.display = "flex"; // Mostrar las imágenes
+
+        // Detener las animaciones
+        document.getElementById("countdown").style.animation = "none"; // Detener la animación del cronómetro
+        clearInterval(countdownInterval); // Detener el cronómetro
+      } else {
+        // Calcular los días, horas, minutos y segundos
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Actualizar el cronómetro en el DOM
+        document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+        // Mostrar un texto aleatorio
+        const randomIndex = Math.floor(Math.random() * randomTexts.length);
+        document.getElementById("randomText").innerHTML = randomTexts[randomIndex];
+      }
+    };
+
+    // Iniciar el cronómetro
+    const countdownInterval = setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
